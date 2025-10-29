@@ -18,6 +18,13 @@ public class RecommendationService {
         return recommendationRepository.findAll();
     }
 
+    /**
+     * Get personalized recommendations for a specific user, ordered by match score desc.
+     */
+    public List<Recommendation> getRecommendationsForUser(Long userId) {
+        return recommendationRepository.findByUserUserIdOrderByMatchScoreDesc(userId);
+    }
+
     public Recommendation createRecommendation(Recommendation recommendation) {
         return recommendationRepository.save(recommendation);
     }

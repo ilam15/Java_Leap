@@ -15,7 +15,10 @@ public class RecommendationController {
     private RecommendationService recommendationService;
 
     @GetMapping
-    public List<Recommendation> getAllRecommendations() {
+    public List<Recommendation> getAllRecommendations(@RequestParam(required = false) Long userId) {
+        if (userId != null) {
+            return recommendationService.getRecommendationsForUser(userId);
+        }
         return recommendationService.getAllRecommendations();
     }
 
