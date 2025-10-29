@@ -2,13 +2,17 @@ package com.example.RecipeRecommendationSystem.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import com.example.RecipeRecommendationSystem.entity.User;
 import com.example.RecipeRecommendationSystem.service.UserService;
 import java.util.List;
+import java.util.Optional;
 
 
 @RestController
-@RequestMapping("/api/users") 
+@RequestMapping("/api/user") 
 public class UserController {
 
     @Autowired
@@ -39,10 +43,20 @@ public class UserController {
         return userService.updateUser(userId, user);
     }
 
-    // ✅ Delete a user
     @DeleteMapping("/{userId}")
     public String deleteUser(@PathVariable Long userId) {
         userService.deleteUser(userId);
         return "User deleted successfully";
+    }
+     @GetMapping("/profile")
+    public ResponseEntity<?> getProfile(@RequestParam(name = "id", required = false) Long userId) {
+        if (userId == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Missing required query parameter: id");
+        }
+        Optional<User> userOpt = userService.getProfile(userId);
+        if (userOpt.isPresent()) {
+            return ResponseEntity.ok(userOpt.get());
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
     }
 }

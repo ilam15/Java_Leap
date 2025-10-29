@@ -45,4 +45,23 @@ public class UserService {
         }
         userRepository.deleteById(userId);
     }
+
+    public User registerUser(User user) {
+        return createUser(user);
+    }
+
+    public Optional<User> authenticate(String username, String password) {
+        Optional<User> userOpt = userRepository.findByUsername(username);
+        if (userOpt.isPresent()) {
+            User user = userOpt.get();
+            if (user.getPassword() != null && user.getPassword().equals(password)) {
+                return Optional.of(user);
+            }
+        }
+        return Optional.empty();
+    }
+
+    public Optional<User> getProfile(Long userId) {
+        return getUserById(userId);
+    }
 }
