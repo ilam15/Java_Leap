@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Healthy Recipe Hub - Home</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #ffffff;
+            color: #333333;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        /* ---------- Navbar ---------- */
+        .navbar {
+            background-color: #ffffff !important;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .navbar-brand {
+            color: #000000 !important;
+            font-weight: 600;
+            font-size: 1.4rem;
+        }
+        .nav-link {
+            color: #555555 !important;
+            margin-right: 15px;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        .nav-link:hover, .nav-link.active {
+            color: #d32f2f !important;
+        }
+
+        /* ---------- Header Search ---------- */
+        .search-section {
+            text-align: center;
+            padding: 40px 20px 20px;
+        }
+        .search-section input {
+            width: 60%;
+            max-width: 600px;
+            border-radius: 25px;
+            border: 1px solid #ccc;
+            padding: 10px 20px;
+        }
+        .search-section button {
+            background-color: #d32f2f;
+            color: #fff;
+            border: none;
+            border-radius: 25px;
+            padding: 10px 25px;
+            margin-left: 10px;
+            transition: background-color 0.3s ease;
+        }
+        .search-section button:hover {
+            background-color: #b71c1c;
+        }
+
+        /* ---------- Recipe Slider ---------- */
+        .carousel-item img {
+            height: 400px;
+            object-fit: cover;
+            border-radius: 15px;
+        }
+
+        /* ---------- Recipe Grid ---------- */
+        .recipe-section {
+            padding: 40px 60px;
+        }
+        .recipe-card {
+            border: 1px solid #eee;
+            border-radius: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            overflow: hidden;
+            transition: transform 0.2s ease;
+            background-color: #fff;
+        }
+        .recipe-card:hover {
+            transform: scale(1.02);
+        }
+        .recipe-card img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+        }
+        .recipe-card .card-body {
+            padding: 15px;
+        }
+        .recipe-card h5 {
+            color: #000;
+            font-weight: 600;
+        }
+        .recipe-card p {
+            color: #555;
+            font-size: 0.9rem;
+        }
+
+        /* ---------- Pagination ---------- */
+        .pagination {
+            justify-content: center;
+        }
+        .page-link {
+            color: #d32f2f;
+            border: none;
+        }
+        .page-link:hover {
+            background-color: #d32f2f;
+            color: white;
+        }
+
+        /* ---------- Footer ---------- */
+        footer {
+            background-color: #fff;
+            color: #555;
+            text-align: center;
+            padding: 20px;
+            border-top: 1px solid #eee;
+            margin-top: 40px;
+        }
+
+        @media (max-width: 768px) {
+            .search-section input {
+                width: 80%;
+            }
+            .recipe-section {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- 🧭 Navbar -->
+<nav class="navbar navbar-expand-lg navbar-light px-4 py-3">
+    <a class="navbar-brand fw-bold" href="/home">Healthy Recipe Hub</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+        <ul class="navbar-nav">
+            <li class="nav-item"><a class="nav-link active" href="/home">Home</a></li>
+            <li class="nav-item"><a class="nav-link" href="/recipes">My Recipes</a></li>
+            <li class="nav-item"><a class="nav-link" href="/profile">Profile</a></li>
+            <li class="nav-item"><a class="nav-link" href="/admin">Admin</a></li>
+            <li class="nav-item"><a class="nav-link text-danger" href="/auth">Logout</a></li>
+        </ul>
+    </div>
+</nav>
+
+<!-- 🔍 Search Section -->
+<div class="container mt-4">
+    <form th:action="@{/home}" method="get" class="d-flex justify-content-center">
+        <input type="text" name="search" class="form-control w-50" placeholder="Search for recipes..." 
+               th:value="${search}">
+        <button class="btn btn-danger ms-2" type="submit">Search</button>
+    </form>
+</div>
+
+<!-- 🖼️ Sliding Banner -->
+<div id="recipeCarousel" class="carousel slide mt-4" data-bs-ride="carousel">
+    <div class="carousel-inner">
+        <div class="carousel-item active text-center">
+            <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=800" class="d-block w-100" alt="Healthy Salad">
+        </div>
+        <div class="carousel-item text-center">
+            <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=800" class="d-block w-100" alt="Smoothie Bowl">
+        </div>
+        <div class="carousel-item text-center">
+            <img src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=800" class="d-block w-100" alt="Healthy Meal">
+        </div>
+    </div>
+</div>
+
+<!-- 🍽️ Recipe Grid -->
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Explore Recipes</h2>
+    <div class="row g-4">
+        <div class="col-md-4" th:each="recipe : ${recipes}">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title" th:text="${recipe.title}">Recipe Title</h5>
+                    <p class="card-text text-secondary" th:text="${#strings.abbreviate(recipe.description, 100)}">
+                        Recipe description...
+                    </p>
+                    <a th:href="@{'/recipes?id=' + ${recipe.recipeId}}" class="btn btn-danger btn-sm">View Details</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pagination Placeholder (Optional JS/Pagination Integration) -->
+    <div class="d-flex justify-content-center mt-4">
+        <nav>
+            <ul class="pagination">
+                <li class="page-item"><a class="page-link text-danger" href="#">Previous</a></li>
+                <li class="page-item"><a class="page-link text-danger" href="#">1</a></li>
+                <li class="page-item"><a class="page-link text-danger" href="#">2</a></li>
+                <li class="page-item"><a class="page-link text-danger" href="#">Next</a></li>
+            </ul>
+        </nav>
+    </div>
+</div>
+
+<!-- 📜 Footer -->
+<footer>
+    <p>&copy; 2025 Healthy Recipe Hub | Eat Smart, Live Better</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

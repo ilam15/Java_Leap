@@ -64,4 +64,10 @@ public class RecipeController {
         recipeService.deleteRecipe(id);
         return ResponseEntity.noContent().build();
     }
+
+    @PostMapping("/add")
+    public String addRecipe(@ModelAttribute Recipe recipe) {
+    recipeService.createRecipe(recipe);
+    return "redirect:/home";
+    }
 }

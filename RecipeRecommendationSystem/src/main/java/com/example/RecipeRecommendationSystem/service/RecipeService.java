@@ -4,6 +4,7 @@ import com.example.RecipeRecommendationSystem.entity.Recipe;
 import com.example.RecipeRecommendationSystem.repository.RecipeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
 import java.util.Optional;
@@ -44,4 +45,8 @@ public class RecipeService {
     public void deleteRecipe(Long recipeId) {
         recipeRepository.deleteById(recipeId);
     }
+
+    public List<Recipe> searchRecipes(String keyword) {
+    return recipeRepository.findByTitleContainingIgnoreCase(keyword);   
+}
 }
