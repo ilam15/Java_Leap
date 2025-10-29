@@ -85,5 +85,11 @@ public class FavoriteService {
     public List<Favorite> getFavoritesForUser(Long userId) {
         return favoriteRepository.findByUserUserId(userId);
     }
+
+    
+    public boolean isRecipeFavoritedByUser(Long userId, Long recipeId) {
+    return favoriteRepository.existsByUser_UserIdAndRecipe_RecipeId(userId, recipeId);
+}
+
 }
 

@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
+import jakarta.servlet.http.HttpSession;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -24,10 +25,13 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest, HttpSession session) {
         Optional<User> userOpt = userService.authenticate(loginRequest.getUsername(), loginRequest.getPassword());
         if (userOpt.isPresent()) {
-            return ResponseEntity.ok(userOpt.get());
+            User user = userOpt.get();
+            // store user id in session for simple server-side auth usage
+            session.setAttribute("userId", user.getUserId());
+            return ResponseEntity.ok(user);
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
     }

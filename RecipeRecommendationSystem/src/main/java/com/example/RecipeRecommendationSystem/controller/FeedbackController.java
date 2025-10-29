@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
+import jakarta.servlet.http.HttpSession;
 
 import java.util.List;
 
@@ -33,6 +34,22 @@ public class FeedbackController {
                                                             @RequestBody Feedback feedback) {
         Feedback created = feedbackService.addFeedback(recipeId, userId, feedback);
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
+    }
+
+    // Form-friendly endpoint for posting feedback from recipe page
+    @PostMapping("/add")
+    public String addFeedbackForm(@RequestParam Long recipeId, @RequestParam(name = "comment") String comment, HttpSession session) {
+        Object uid = session.getAttribute("userId");
+        Long userId = null;
+        if (uid instanceof Long) userId = (Long) uid;
+        else if (uid instanceof Integer) userId = ((Integer) uid).longValue();
+        if (userId == null) {
+            return "redirect:/auth";
+        }
+        Feedback feedback = new Feedback();
+        feedback.setComment(comment);
+        feedbackService.addFeedback(recipeId, userId, feedback);
+        return "redirect:/recipes?id=" + recipeId;
     }
 }
 

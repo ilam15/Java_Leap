@@ -48,4 +48,8 @@ public class Recipe {
 		}
 	}
 
+    public Object getUser() {
+		return this.createdBy;
+    }
+
 }

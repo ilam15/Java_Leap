@@ -9,11 +9,12 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
+import jakarta.servlet.http.HttpSession;
 
 import java.util.List;
 
 @Controller
-@RequestMapping("api/favorites")
+@RequestMapping("/api/favorites")
 public class FavoriteController {
 
     @Autowired
@@ -80,6 +81,21 @@ public class FavoriteController {
     public ResponseEntity<?> removeFavoriteApi(@PathVariable Long recipeId, @RequestParam Long userId) {
         favoriteService.removeFavorite(userId, recipeId);
         return ResponseEntity.ok("Favorite removed successfully");
+    }
+
+    // --- Form endpoint used by recipe page to add a favorite for current session user ---
+    @PostMapping("/add/{recipeId}")
+    public String addFavoriteForm(@PathVariable Long recipeId, HttpSession session) {
+        Object uid = session.getAttribute("userId");
+        Long userId = null;
+        if (uid instanceof Long) userId = (Long) uid;
+        else if (uid instanceof Integer) userId = ((Integer) uid).longValue();
+        if (userId == null) {
+            // no user in session -> redirect to auth
+            return "redirect:/auth";
+        }
+        favoriteService.addFavorite(userId, recipeId);
+        return "redirect:/recipes?id=" + recipeId;
     }
 
 }
