@@ -24,13 +24,13 @@ public class RecipeController {
     public String getAllRecipes(Model model) {
         List<Recipe> recipes = recipeService.getAllRecipes();
         model.addAttribute("recipes", recipes);
-        return "recipes/list";  // Thymeleaf template
+        return "recipes/list";  
     }
 
     @GetMapping("/new")
     public String createRecipeForm(Model model) {
         model.addAttribute("recipe", new Recipe());
-        model.addAttribute("users", userService.getAllUsers()); // for assigning creator
+        model.addAttribute("users", userService.getAllUsers()); 
         return "recipes/form";
     }
 
@@ -49,14 +49,12 @@ public class RecipeController {
         return "recipes/form";
     }
 
-    // ✅ Update an existing recipe
     @PostMapping("/update/{recipeId}")
     public String updateRecipe(@PathVariable Long recipeId, @ModelAttribute Recipe recipe) {
         recipeService.updateRecipe(recipeId, recipe);
         return "redirect:/recipes";
     }
 
-    // ✅ Delete a recipe
     @GetMapping("/delete/{recipeId}")
     public String deleteRecipe(@PathVariable Long recipeId) {
         recipeService.deleteRecipe(recipeId);
@@ -68,6 +66,6 @@ public class RecipeController {
         Recipe recipe = recipeService.getRecipeById(recipeId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid recipe ID: " + recipeId));
         model.addAttribute("recipe", recipe);
-        return "recipes/view";  // optional view page
+        return "recipes/view";  
     }
 }
