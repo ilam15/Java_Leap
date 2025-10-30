@@ -48,8 +48,22 @@ public class PageController {
         return "Pages/Home";
     }
 
+    @GetMapping("/")
+    public String rootRedirect(HttpSession session) {
+        Object uid = session.getAttribute("userId");
+        if (uid != null) {
+            return "redirect:/home";
+        }
+        return "redirect:/auth";
+    }
+
     @GetMapping("/auth")
-    public String showAuthPage() {
+    public String showAuthPage(HttpSession session) {
+        // If a userId is present in the session, they are considered logged in for this simple flow
+        Object uid = session.getAttribute("userId");
+        if (uid != null) {
+            return "redirect:/home";
+        }
         return "Pages/Auth";
     }
 
@@ -122,5 +136,13 @@ public class PageController {
         List<Recipe> favoriteRecipes = recipeService.getFavoriteRecipesForCurrentUser();
         model.addAttribute("favoriteRecipes", favoriteRecipes);
         return "Pages/Favorite";
+    }
+     @GetMapping("/logout")
+    public String logout(HttpSession session) {
+        // Invalidate the session so server-side userId is removed and user is logged out
+        try {
+            session.invalidate();
+        } catch (Exception ignored) {}
+        return "redirect:/auth";
     }
 }

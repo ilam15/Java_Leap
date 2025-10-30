@@ -12,7 +12,6 @@
             font-family: 'Poppins', sans-serif;
         }
 
-        /* ---------- Navbar ---------- */
         .navbar {
             background-color: #ffffff !important;
             box-shadow: 0 2px 5px rgba(0,0,0,0.05);
@@ -32,7 +31,6 @@
             color: #d32f2f !important;
         }
 
-        /* ---------- Header Search ---------- */
         .search-section {
             text-align: center;
             padding: 40px 20px 20px;
@@ -57,14 +55,12 @@
             background-color: #b71c1c;
         }
 
-        /* ---------- Recipe Slider ---------- */
         .carousel-item img {
             height: 400px;
             object-fit: cover;
             border-radius: 15px;
         }
 
-        /* ---------- Recipe Grid ---------- */
         .recipe-section {
             padding: 40px 60px;
         }
@@ -96,7 +92,6 @@
             font-size: 0.9rem;
         }
 
-        /* ---------- Pagination ---------- */
         .pagination {
             justify-content: center;
         }
@@ -109,7 +104,6 @@
             color: white;
         }
 
-        /* ---------- Footer ---------- */
         footer {
             background-color: #fff;
             color: #555;
@@ -143,7 +137,7 @@
             <li class="nav-item"><a class="nav-link" href="/recipes">My Recipes</a></li>
             <li class="nav-item"><a class="nav-link" th:href="@{/recipe/add}">Add Recipe</a></li>
             <li class="nav-item"><a class="nav-link" href="/favorites">My Favourites</a></li>
-            <li class="nav-item"><a class="nav-link text-danger" href="/auth">Logout</a></li>
+            <li class="nav-item"><a class="nav-link text-danger" href="/logout">Logout</a></li>
         </ul>
     </div>
 </nav>
@@ -172,7 +166,7 @@
     </div>
 </div>
 
-<!-- 🍽️ Recipe Grid -->
+
 <div class="container mt-5">
     <h2 class="text-center mb-4">Explore Recipes</h2>
     <div class="row g-4">
@@ -189,7 +183,7 @@
         </div>
     </div>
 
-    <!-- Pagination Placeholder (Optional JS/Pagination Integration) -->
+   
     <div class="d-flex justify-content-center mt-4">
         <nav>
             <ul class="pagination">

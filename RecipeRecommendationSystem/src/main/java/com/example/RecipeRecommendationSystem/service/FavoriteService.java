@@ -49,9 +49,6 @@ public class FavoriteService {
         favoriteRepository.deleteById(favoriteId);
     }
 
-    /**
-     * Add a favorite for a user and recipe.
-     */
     @Transactional
     public Favorite addFavorite(Long userId, Long recipeId) {
         User user = userService.getUserById(userId)
@@ -59,7 +56,6 @@ public class FavoriteService {
         Recipe recipe = recipeService.getRecipeById(recipeId)
                 .orElseThrow(() -> new IllegalArgumentException("Recipe not found with ID: " + recipeId));
 
-        // avoid duplicates: if exists, return existing
         Optional<Favorite> existing = favoriteRepository.findByUserUserIdAndRecipeRecipeId(userId, recipeId);
         if (existing.isPresent()) return existing.get();
 
@@ -69,9 +65,6 @@ public class FavoriteService {
         return favoriteRepository.save(fav);
     }
 
-    /**
-     * Remove a favorite by userId and recipeId.
-     */
     @Transactional
     public void removeFavorite(Long userId, Long recipeId) {
         Optional<Favorite> existing = favoriteRepository.findByUserUserIdAndRecipeRecipeId(userId, recipeId);

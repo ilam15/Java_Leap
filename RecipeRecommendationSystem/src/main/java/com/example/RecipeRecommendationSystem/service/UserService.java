@@ -61,6 +61,10 @@ public class UserService {
         return Optional.empty();
     }
 
+    public Optional<User> findByUsername(String username) {
+        return userRepository.findByUsername(username);
+    }
+
     public Optional<User> getProfile(Long userId) {
         return getUserById(userId);
     }

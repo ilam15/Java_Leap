@@ -61,7 +61,7 @@
                 <li class="nav-item"><a class="nav-link active text-danger" href="/favorites">Favorites</a></li>
                 <li class="nav-item"><a class="nav-link" href="/profile">Profile</a></li>
                 <li class="nav-item"><a class="nav-link" href="/admin">Admin</a></li>
-                <li class="nav-item"><a class="nav-link text-danger" href="/auth">Logout</a></li>
+                <li class="nav-item"><a class="nav-link text-danger" href="/logout">Logout</a></li>
             </ul>
         </div>
     </nav>
@@ -77,7 +77,7 @@
                     <div class="card-body">
                         <h5 class="card-title text-black" th:text="${recipe.title}"></h5>
                         <p class="card-text text-secondary" th:text="${#strings.abbreviate(recipe.description, 100)}"></p>
-                        <a th:href="@{'/recipes/' + ${recipe.id}}" class="btn btn-outline-danger w-100">View Recipe</a>
+                        <a th:href="@{'/recipes?id=' + ${recipe.recipeId}}" class="btn btn-outline-danger w-100">View Recipe</a>
                     </div>
                 </div>
             </div>

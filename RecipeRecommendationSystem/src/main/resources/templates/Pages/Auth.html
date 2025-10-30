@@ -88,7 +88,7 @@
     <div id="signup-form" class="hidden">
         <div class="auth-header">
             <h2>Sign Up</h2>
-        </div>
+        </div> 
         <form id="signupForm">
             <div class="mb-3">
                 <label>Username</label>
@@ -142,6 +142,7 @@
 
         const response = await fetch("/api/auth/login", {
             method: "POST",
+            credentials: 'same-origin',
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ username, password })
         });
@@ -151,9 +152,13 @@
             const user = await response.json();
             messageBox.style.color = "green";
             messageBox.innerText = "Login successful! Welcome, " + user.username;
+            // Redirect to home so that authenticated users only see Home
+            window.location.href = '/home';
         } else {
+            // show server-provided error body (if any) to help debugging
+            const errText = await response.text();
             messageBox.style.color = "red";
-            messageBox.innerText = "Invalid username or password";
+            messageBox.innerText = errText || "Invalid username or password";
         }
     });
 
@@ -168,18 +173,38 @@
 
         const response = await fetch("/api/auth/register", {
             method: "POST",
+            credentials: 'same-origin',
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ username, email, password, birthDate, dietPreference })
+            // send dietaryPreferences field name to match the User entity
+            body: JSON.stringify({ username, email, password, birthDate, dietaryPreferences: dietPreference })
         });
 
         const messageBox = document.getElementById("signupMessage");
         if (response.ok) {
             const user = await response.json();
+            // Attempt to auto-login the newly created user so they can see Home immediately
+            const loginResp = await fetch('/api/auth/login', {
+                method: 'POST',
+                credentials: 'same-origin',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password })
+            });
+            if (loginResp.ok) {
+                // On successful login, redirect to home
+                window.location.href = '/home';
+                return;
+            }
+            // If auto-login failed, fall back to showing a success message and toggle to login
+            const errText = await loginResp.text().catch(() => null);
             messageBox.style.color = "green";
-            messageBox.innerText = "Account created successfully!";
+            messageBox.innerText = "Account created successfully!" + (errText ? (" (auto-login error: " + errText + ")") : " Please log in.");
+            // Switch back to login form
+            document.getElementById("signup-form").classList.add("hidden");
+            document.getElementById("login-form").classList.remove("hidden");
         } else {
+            const errText = await response.text().catch(() => null);
             messageBox.style.color = "red";
-            messageBox.innerText = "Registration failed!";
+            messageBox.innerText = errText || "Registration failed!";
         }
     });
 </script>

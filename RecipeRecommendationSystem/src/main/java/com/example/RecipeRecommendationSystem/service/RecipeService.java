@@ -5,7 +5,6 @@ import com.example.RecipeRecommendationSystem.entity.User;
 import com.example.RecipeRecommendationSystem.repository.RecipeRepository;
 import com.example.RecipeRecommendationSystem.repository.UserRepository;
 
-import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -56,22 +55,15 @@ public class RecipeService {
         return recipeRepository.findByTitleContainingIgnoreCase(keyword);
     }
 
-    // ✅ Get Favorite Recipes for Current Logged-In User
-    public List<Recipe> getFavoriteRecipesForCurrentUser() {
-        // Get authentication info from security context
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+   public List<Recipe> getFavoriteRecipesForCurrentUser() {
+    // 🔹 Temporary user for demo purposes
+    Long userId = 1L;
 
-        if (authentication == null || authentication.name() == null) {
-            throw new RuntimeException("User not authenticated");
-        }
+    // Validate and fetch user
+    User user = userRepository.findById(userId)
+            .orElseThrow(() -> new RuntimeException("User not found with ID: " + userId));
 
-        String username = authentication.name();
-
-        // Fetch user from repository
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-
-        // Return their favorite recipes
-        return user.getFavoriteRecipes();
-    }
+    // Return user's favorite recipes
+    return user.getFavoriteRecipes();
+}
 }

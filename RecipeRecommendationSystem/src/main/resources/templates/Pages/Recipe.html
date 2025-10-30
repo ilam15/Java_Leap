@@ -89,7 +89,7 @@
             <li class="nav-item"><a class="nav-link" href="/recipes">My Recipes</a></li>
             <li class="nav-item"><a class="nav-link" href="/profile">Profile</a></li>
             <li class="nav-item"><a class="nav-link" href="/admin">Admin</a></li>
-            <li class="nav-item"><a class="nav-link text-danger" href="/auth">Logout</a></li>
+            <li class="nav-item"><a class="nav-link text-danger" href="/logout">Logout</a></li>
         </ul>
     </div>
 </nav>
@@ -123,7 +123,7 @@
 
     <div class="mt-4 d-flex gap-2">
         <!-- Favorite button changes color -->
-        <form th:action="@{'/api/favorites/toggle/' + ${recipe.recipeId}}" method="post">
+        <form th:action="@{'/api/favorites/add/' + ${recipe.recipeId}}" method="post">
             <button th:classappend="${isFavorited} ? 'btn-green' : 'btn-red'" class="btn px-4" type="submit">
                 <span th:text="${isFavorited} ? '💚 Favorited' : '❤️ Add to Favorites'"></span>
             </button>
