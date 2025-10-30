@@ -49,7 +49,6 @@ public class FavoriteController {
         return "redirect:/favorites";
     }
 
-    // --- REST API: Add favorite by recipeId (requires userId query param) ---
     @PostMapping(value = "/{recipeId}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<Favorite> addFavoriteApi(@PathVariable Long recipeId, @RequestParam Long userId) {
@@ -75,7 +74,6 @@ public class FavoriteController {
         return "redirect:/favorites";
     }
 
-    // --- REST API: Remove favorite for a given recipeId and userId ---
     @DeleteMapping(value = "/{recipeId}")
     @ResponseBody
     public ResponseEntity<?> removeFavoriteApi(@PathVariable Long recipeId, @RequestParam Long userId) {
@@ -83,7 +81,6 @@ public class FavoriteController {
         return ResponseEntity.ok("Favorite removed successfully");
     }
 
-    // --- Form endpoint used by recipe page to add a favorite for current session user ---
     @PostMapping("/add/{recipeId}")
     public String addFavoriteForm(@PathVariable Long recipeId, HttpSession session) {
         Object uid = session.getAttribute("userId");
@@ -91,7 +88,6 @@ public class FavoriteController {
         if (uid instanceof Long) userId = (Long) uid;
         else if (uid instanceof Integer) userId = ((Integer) uid).longValue();
         if (userId == null) {
-            // no user in session -> redirect to auth
             return "redirect:/auth";
         }
         favoriteService.addFavorite(userId, recipeId);

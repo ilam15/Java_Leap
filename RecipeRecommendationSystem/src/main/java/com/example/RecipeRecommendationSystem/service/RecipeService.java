@@ -56,14 +56,9 @@ public class RecipeService {
     }
 
    public List<Recipe> getFavoriteRecipesForCurrentUser() {
-    // 🔹 Temporary user for demo purposes
     Long userId = 1L;
-
-    // Validate and fetch user
     User user = userRepository.findById(userId)
             .orElseThrow(() -> new RuntimeException("User not found with ID: " + userId));
-
-    // Return user's favorite recipes
     return user.getFavoriteRecipes();
 }
 }

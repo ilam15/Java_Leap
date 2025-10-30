@@ -3,6 +3,7 @@ package com.example.RecipeRecommendationSystem.controller.Router;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -43,6 +44,7 @@ public class PageController {
         } else {
             recipes = recipeService.getAllRecipes();
         }
+        recipes = recipes == null ? Collections.emptyList() : recipes.stream().filter(Objects::nonNull).toList();
         model.addAttribute("recipes", recipes);
         model.addAttribute("search", search);
         return "Pages/Home";
@@ -59,7 +61,6 @@ public class PageController {
 
     @GetMapping("/auth")
     public String showAuthPage(HttpSession session) {
-        // If a userId is present in the session, they are considered logged in for this simple flow
         Object uid = session.getAttribute("userId");
         if (uid != null) {
             return "redirect:/home";
@@ -83,8 +84,6 @@ public class PageController {
                     feedbacks = Collections.emptyList();
                 }
                 model.addAttribute("feedbacks", feedbacks);
-
-                // Determine currently logged-in user from HTTP session (if set by your auth flow)
                 Long currentUserId = null;
                 Object uid = session.getAttribute("userId");
                 if (uid instanceof Long) {
@@ -98,7 +97,6 @@ public class PageController {
                     currentUser = userService.getUserById(currentUserId).orElse(null);
                 }
 
-                // Check if user favorited this recipe (only if we have a current user)
                 boolean isFavorited = false;
                 if (currentUser != null) {
                     isFavorited = favoriteService.isRecipeFavoritedByUser(currentUser.getUserId(), recipe.getRecipeId());
@@ -108,7 +106,6 @@ public class PageController {
                 // Ownership flag
                 boolean isOwner = false;
                 if (currentUser != null && recipe.getUser() != null) {
-                    // recipe.getUser() returns the creator (createdBy)
                     Object ownerObj = recipe.getUser();
                     if (ownerObj instanceof User) {
                         User owner = (User) ownerObj;
@@ -132,7 +129,6 @@ public class PageController {
 
      @GetMapping("/favorites")
     public String showFavoritePage(Model model) {
-        // You can later replace this with a call to favoriteService.getFavoritesByUser(currentUser)
         List<Recipe> favoriteRecipes = recipeService.getFavoriteRecipesForCurrentUser();
         model.addAttribute("favoriteRecipes", favoriteRecipes);
         return "Pages/Favorite";

@@ -36,20 +36,32 @@ public class FeedbackController {
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
-    // Form-friendly endpoint for posting feedback from recipe page
     @PostMapping("/add")
     public String addFeedbackForm(@RequestParam Long recipeId, @RequestParam(name = "comment") String comment, HttpSession session) {
         Object uid = session.getAttribute("userId");
         Long userId = null;
-        if (uid instanceof Long) userId = (Long) uid;
-        else if (uid instanceof Integer) userId = ((Integer) uid).longValue();
+        try {
+            if (uid instanceof Long) userId = (Long) uid;
+            else if (uid instanceof Integer) userId = ((Integer) uid).longValue();
+            else if (uid instanceof String) userId = Long.parseLong((String) uid);
+        } catch (Exception e) {
+            // fall through to check null below
+        }
+
         if (userId == null) {
+            // not logged in
             return "redirect:/auth";
         }
-        Feedback feedback = new Feedback();
-        feedback.setComment(comment);
-        feedbackService.addFeedback(recipeId, userId, feedback);
-        return "redirect:/recipes?id=" + recipeId;
+
+        try {
+            Feedback feedback = new Feedback();
+            feedback.setComment(comment == null ? "" : comment.trim());
+            feedbackService.addFeedback(recipeId, userId, feedback);
+            return "redirect:/recipes?id=" + recipeId;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return "redirect:/recipes?id=" + recipeId + "&feedbackError=" + java.net.URLEncoder.encode(ex.getMessage() == null ? "error" : ex.getMessage(), java.nio.charset.StandardCharsets.UTF_8);
+        }
     }
 }
 
